@@ -10,21 +10,65 @@
 </head>
 
 <body>
-    <h1>Primes In Range</h1>
-    <input type="number" id="start" />
-    <input type="number" id="end" />
-    <button id="submit" onclick="getPrimesInRange()">Submit</button>
-
-    <div>
-        <h1>Main Result</h1>
-        <h3 id="totalTime"></h3>
-        <h3 id="avgTime"></h3>
+    <div id="main">
+        <div id="head">
+            <h1>Primes In Range</h1>
+            <label>From:</label>
+            <input type="number" id="start" />
+            <label>To:</label>
+            <input type="number" id="end" />
+            <button id="submit" onclick="getPrimesInRange()">Submit</button>
+        </div>
+        <div id="result">
+            <h1>Main Result</h1>
+            <h3 id="totalTime"></h3>
+            <h3 id="avgTimeForAll"></h3>
+            <h3 id="avgTimeForPrime"></h3>
+            <button id="details">Details</button>
+            <!-- Modal -->
+            <div id="myModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h3>Time taken by each number to get checked</h3>
+                    <div id="containerForAll">
+                        <table id="tableForAll">
+                            <thead>
+                                <tr>
+                                    <th>Number</th>
+                                    <th>Result</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyForAll">
+                    
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3>Time taken by each Prime number to get checked</h3>
+                    <div id="containerForPrime">
+                        <table id="tableForPrime">
+                            <thead>
+                                <tr>
+                                    <th>Number</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyForPrime">
+                    
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 
 </html>
 <!-- <script src="./index.js"></script> -->
 <script>
+    let finalResult = [];
+
     const checkPrime = (number) => {
         let startTime = Date.now();
         let count = 0;
@@ -54,7 +98,7 @@
             }
         }
         time = Date.now() - startTime;
-        console.log('time:', Date.now())
+        //console.log('time:', Date.now())
         data = {
             number: number,
             time: time,
@@ -68,7 +112,7 @@
         let start = document.getElementById("start").value;
         let end = document.getElementById("end").value;
 
-        let finalResult = [];
+        finalResult = [];
         for (let i = start; i <= end; i++) {
             finalResult.push(checkPrime(i));
         }
@@ -80,14 +124,98 @@
         totalTime.append(`Total Time: ${time} ms`)
 
         let total = 0;
+        let primeTotal = 0;
+        let primeCount = 0;
         for (let i = 0; i < finalResult.length; i++) {
             total += finalResult[i].time
+            if (finalResult[i].result === "Prime") {
+                primeTotal += finalResult[i].time;
+                primeCount++;
+            }
         }
 
-        let avg = total / finalResult.length
-        let avgTime = document.getElementById("avgTime")
-        avgTime.innerHTML = '';
-        avgTime.append(`Average Time: ${avg} ms`)
+        let avg = total / finalResult.length;
+        let avgTimeForAll = document.getElementById("avgTimeForAll")
+        avgTimeForAll.innerHTML = '';
+        avgTimeForAll.append(`Average Time of all numbers in the range: ${avg} ms`);
+
+        let avgPrime
+        if (primeCount === 0) {
+            avgPrime = 0;
+        }
+        else {
+            avgPrime = primeTotal / primeCount;
+        }
+
+        let avgTimeForPrime = document.getElementById("avgTimeForPrime")
+        avgTimeForPrime.innerHTML = '';
+        avgTimeForPrime.append(`Average Time of Prime numbers in the range: ${avgPrime} ms`);
+
+    }
+
+    let modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    let btn = document.getElementById("details");
+
+    // Get the <span> element that closes the modal
+    let span = document.querySelector(".close");
+
+    // When the user clicks the button, open the modal 
+    btn.onclick = function () {
+        modal.style.display = "block";
+
+        let tableForAll = document.querySelector("#tbodyForAll");
+        tableForAll.innerHTML = "";
+
+        let tableForPrime = document.querySelector("#tbodyForPrime");
+        tableForPrime.innerHTML = "";
+
+        finalResult.map((e) => {
+            let tr = document.createElement("tr");
+
+            let td1 = document.createElement("td");
+            let p1 = document.createElement("p");
+            p1.innerText = e.number;
+            td1.append(p1);
+
+            let td2 = document.createElement("td");
+            let p2 = document.createElement("p");
+            p2.innerText = e.result;
+            td2.append(p2);
+
+            let td3 = document.createElement("td");
+            let p3 = document.createElement("p");
+            p3.innerText = e.time;
+            td3.append(p3);
+
+            tr.append(td1, td2, td3)
+
+            tableForAll.append(tr);
+
+            if(e.result==="Prime"){
+                let trPrime = document.createElement("tr");
+
+                let td4 = document.createElement("td");
+                let p4 = document.createElement("p");
+                p4.innerText = e.number;
+                td4.append(p4);
+
+                let td5 = document.createElement("td");
+                let p5 = document.createElement("p");
+                p5.innerText = e.time;
+                td5.append(p5);
+
+                trPrime.append(td4, td5)
+
+                tableForPrime.append(trPrime);
+            }
+        })
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+        modal.style.display = "none";
     }
 
 
