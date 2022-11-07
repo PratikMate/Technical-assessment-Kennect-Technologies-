@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Primes-In-Range</title>
+    <link rel="stylesheet" href="./index.css">
+</head>
+
+<body>
+    <h1>Primes In Range</h1>
+    <input type="number" id="start" />
+    <input type="number" id="end" />
+    <button id="submit" onclick="getPrimesInRange()">Submit</button>
+
+    <div>
+        <h1>Main Result</h1>
+        <h3 id="totalTime"></h3>
+        <h3 id="avgTime"></h3>
+    </div>
+</body>
+
+</html>
+<!-- <script src="./index.js"></script> -->
+<script>
+    const checkPrime = (number) => {
+        let startTime = Date.now();
+        let count = 0;
+        let time;
+        let data;
+        if (number == 1 || number == 0) {
+            time = Date.now() - startTime;
+            data = {
+                number: number,
+                time: time,
+                result: "Not Prime"
+            }
+            return data;
+        }
+        for (let i = 2; i < number; i++) {
+            if (number % i == 0) {
+                count++;
+            }
+            if (count >= 1) {
+                time = Date.now() - startTime;
+                data = {
+                    number: number,
+                    time: time,
+                    result: "Not Prime"
+                }
+                return data;
+            }
+        }
+        time = Date.now() - startTime;
+        console.log('time:', Date.now())
+        data = {
+            number: number,
+            time: time,
+            result: "Prime"
+        }
+        return data;
+    }
+
+    const getPrimesInRange = () => {
+        let startTime = Date.now();
+        let start = document.getElementById("start").value;
+        let end = document.getElementById("end").value;
+
+        let finalResult = [];
+        for (let i = start; i <= end; i++) {
+            finalResult.push(checkPrime(i));
+        }
+        console.log("finalResult:", finalResult);
+
+        time = Date.now() - startTime;
+        let totalTime = document.getElementById("totalTime")
+        totalTime.innerHTML = '';
+        totalTime.append(`Total Time: ${time} ms`)
+
+        let total = 0;
+        for (let i = 0; i < finalResult.length; i++) {
+            total += finalResult[i].time
+        }
+
+        let avg = total / finalResult.length
+        let avgTime = document.getElementById("avgTime")
+        avgTime.innerHTML = '';
+        avgTime.append(`Average Time: ${avg} ms`)
+    }
+
+
+</script>
