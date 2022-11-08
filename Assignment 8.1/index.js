@@ -1,3 +1,10 @@
+/*
+Time complexity of this code,
+Best case = O(n);
+Worst case = O(n^2);
+
+space complexity of this code is O(n)
+*/
 let finalResult = [];
 
 const checkPrime = (number) => {
@@ -43,6 +50,18 @@ const getPrimesInRange = () => {
     let start = document.getElementById("start").value;
     let end = document.getElementById("end").value;
 
+    if (+start > +end) {
+        let totalTime = document.getElementById("totalTime")
+        totalTime.innerHTML = '';
+        let avgTimeForAll = document.getElementById("avgTimeForAll")
+        avgTimeForAll.innerHTML = '';
+        let avgTimeForPrime = document.getElementById("avgTimeForPrime")
+        avgTimeForPrime.innerHTML = '';
+        finalResult = [];
+        alert("Please enter valid range!!");
+        return;
+    }
+
     finalResult = [];
     for (let i = start; i <= end; i++) {
         finalResult.push(checkPrime(i));
@@ -58,7 +77,7 @@ const getPrimesInRange = () => {
     let primeTotal = 0;
     let primeCount = 0;
     for (let i = 0; i < finalResult.length; i++) {
-        total += finalResult[i].time
+        total += +finalResult[i].time
         if (finalResult[i].result === "Prime") {
             primeTotal += finalResult[i].time;
             primeCount++;
@@ -66,6 +85,7 @@ const getPrimesInRange = () => {
     }
 
     let avg = total / finalResult.length;
+    avg = avg.toFixed(3);
     let avgTimeForAll = document.getElementById("avgTimeForAll")
     avgTimeForAll.innerHTML = '';
     avgTimeForAll.append(`Average Time of all numbers in the range: ${avg} ms`);
@@ -76,6 +96,7 @@ const getPrimesInRange = () => {
     }
     else {
         avgPrime = primeTotal / primeCount;
+        avgPrime = avgPrime;
     }
 
     let avgTimeForPrime = document.getElementById("avgTimeForPrime")
