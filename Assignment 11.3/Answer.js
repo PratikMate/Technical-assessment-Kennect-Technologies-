@@ -11,7 +11,8 @@ let height2 = [4, 2, 0, 3, 2, 5];
 
 const trapWater = (height) => {
     let right = new Array(height.length);
-
+    
+    // storing greatest element for each height array element on right side
     let max = 0;
     for (let i = height.length - 1; i >= 0; i--) {
         right[i] = max;
@@ -19,11 +20,11 @@ const trapWater = (height) => {
             max = height[i];
         }
     }
-
+    // finding greatest element for each height array element on left side
+    // and selecting minimum between left & right to get answer
     max = 0
     let ans = 0;
     for (let i = 0; i < height.length; i++) {
-        //left[i] = max;
         if (i >= 1) {
             let x = Math.min(max, right[i])
             if (height[i] < x) {
@@ -31,7 +32,6 @@ const trapWater = (height) => {
                 ans += x - height[i];
             }
         }
-
         if (height[i] > max) {
             max = height[i];
         }
