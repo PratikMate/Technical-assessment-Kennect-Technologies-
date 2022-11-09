@@ -1,16 +1,18 @@
 const express = require('express')
+const cors = require('cors');
 
 const app = express()
 
-app.use(express.urlencoded({extended: true}))
+app.use(cors())
+app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
 app.post('/', (req, res) => {
-    const {action, type, date, value} = req.body
+    const { action, type, date, value } = req.body
     console.log('req:', req.body)
-    
-    let [d1, m1, y1] = date.split("-").map(Number);
-    
+
+    let [y1, m1, d1] = date.split("-").map(Number);
+
     let x = +value;
     if (type === "weeks") {
         x = 7 * +value;
@@ -18,11 +20,11 @@ app.post('/', (req, res) => {
 
     if (action === "add") {
         let data = addDays(d1, m1, y1, x);
-        res.send({data: data});
+        res.send({ data: data });
     }
     else if (action === "subtract") {
         let data = subtractDays(d1, m1, y1, x);
-        res.send({data: data});
+        res.send({ data: data });
     }
 })
 
