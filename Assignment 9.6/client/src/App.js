@@ -1,14 +1,13 @@
 import './App.css';
 import React, { useState } from 'react';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
 
 function App() {
-  const [value, onChange] = useState(new Date());
+
   const [data, setData] = useState({
     "action": "add",
     "type": "days",
-    "value": ""
+    "value": "",
+    "date":""
   });
   
   const handleChange = (e) => {
@@ -20,18 +19,14 @@ function App() {
   }
 
   const handleSubmit = () => {
-    let newData = {
-      ...data,
-      "date": value.getDate() + "-" + value.getMonth() + "-" + value.getFullYear()
-    }
-    console.log('data:', newData)
+    console.log('data:', data)
 
     fetch("http://localhost:8080", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(newData)
+      body: JSON.stringify(data)
     })
       .then((r) => r.json())
       .then((r) => {
@@ -56,11 +51,13 @@ function App() {
         <option value="weeks">Weeks</option>
       </select>
       <br />
-      <label>Select Date: </label>
       <div className="calender">
-      <Calendar onChange={onChange} value={value} />
+        <label>Select Date: </label>
+        <input type="date" name="date" onChange={handleChange} />
       </div>
-      <button disabled={data.value == "" || data.value < 0 ? true:false} className="btn" onClick={handleSubmit} >Submit</button>
+
+      <br/>
+      <button disabled={data.value === "" || data.value < 0 ? true:false} className="btn" onClick={handleSubmit} >Submit</button>
     </div>
   );
 }
